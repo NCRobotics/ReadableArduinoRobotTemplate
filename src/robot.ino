@@ -41,7 +41,6 @@ To get started:
 #include <Arduino.h>
 #include <Servo.h>
 
-#include <SimpleTimer.h>  // SimpleTimer Library
 #include <XBOXRECV.h>     // USB Host Shield Library
 #include <MDD10A.h>       // Motor Controllers
 
