@@ -88,6 +88,11 @@ float RightX = 0;
 float RightY = 0;
 float DriveLeftSpeed = 0;
 float DriveRightSpeed = 0;
+float DriveLFSpeed = 0;
+float DriveLRSpeed = 0;
+float DriveRFSpeed = 0;
+float DriveRRSpeed = 0;
+float DriveSideSpeed = 0;
 float liftSpeed = 0;
 float clawSpeed = 0;
 const int LeftDrive1 = 0;
@@ -200,23 +205,80 @@ void controllerRead() {
 }
 
 void setDriveSpeeds() {
-  DriveLeftSpeed = LeftY - LeftX;
-  if (DriveLeftSpeed > 255) {
-    DriveLeftSpeed = 255;
-  }
-  else if (DriveLeftSpeed < -255) {
-    DriveLeftSpeed = -255;
-  }
-  DriveRightSpeed = LeftY + LeftX;
-  if (DriveRightSpeed > 255) {
-    DriveRightSpeed = 255;
-  }
-  else if (DriveRightSpeed < -255) {
-    DriveRightSpeed = -255;
-  }
+  switch (driverMode) {
+    case 1:
+      // Tank Drive
+      DriveLeftSpeed = LeftY - LeftX;
+      if (DriveLeftSpeed > 255) {
+        DriveLeftSpeed = 255;
+      }
+      else if (DriveLeftSpeed < -255) {
+        DriveLeftSpeed = -255;
+      }
+      DriveRightSpeed = LeftY + LeftX;
+      if (DriveRightSpeed > 255) {
+        DriveRightSpeed = 255;
+      }
+      else if (DriveRightSpeed < -255) {
+        DriveRightSpeed = -255;
+      }
+    break;
+
+    case 2:
+      // H-Drive
+      DriveLeftSpeed = LeftY - LeftX;
+      if (DriveLeftSpeed > 255) {
+        DriveLeftSpeed = 255;
+      }
+      else if (DriveLeftSpeed < -255) {
+        DriveLeftSpeed = -255;
+      }
+      DriveRightSpeed = LeftY + LeftX;
+      if (DriveRightSpeed > 255) {
+        DriveRightSpeed = 255;
+      }
+      else if (DriveRightSpeed < -255) {
+        DriveRightSpeed = -255;
+      }
+      DriveSideSpeed = RightX;
+    break;
+
+    case 3:
+      // Drone-style
+      DriveLFSpeed = LeftY + LeftX + RightX;
+      if (DriveLFSpeed > 255) {
+        DriveLFSpeed = 255;
+      }
+      else if (DriveLFSpeed < -255) {
+        DriveLFSpeed = -255;
+      }
+      DriveLRSpeed = LeftY + LeftX - RightX;
+      if (DriveLRSpeed > 255) {
+        DriveLRSpeed = 255;
+      }
+      else if (DriveLRSpeed < -255) {
+        DriveLRSpeed = -255;
+      }
+      DriveRFSpeed = LeftY - LeftX - RightX;
+      if (DriveRFSpeed > 255) {
+        DriveRFSpeed = 255;
+      }
+      else if (DriveRFSpeed < -255) {
+        DriveRFSpeed = -255;
+      }
+      DriveRRSpeed = LeftY - LeftX + RightX;
+    if (DriveRRSpeed > 255) {
+      DriveRRSpeed = 255;
+    }
+    else if (DriveRRSpeed < -255) {
+      DriveRRSpeed = -255;
+    }
+  break;
+} //(driverMode)
 }
 
 void writeRobot() {
+// Pre-set for tank drive.  Change accordingly with different motor setup
   mc.setMotorSpeed(LeftDrive1,DriveLeftSpeed);
   mc.setMotorSpeed(LeftDrive2,DriveLeftSpeed);
   mc.setMotorSpeed(RightDrive1,DriveRightSpeed);
