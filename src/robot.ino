@@ -25,8 +25,9 @@ To get started:
 1.  Change MDD10A.h to the correct pinout configuration
     based on your shield or wiring.
 2.  Verify the XBox button mapping in the controllerRead function
-3.  Set the motors to the proper motor controllers in the MDD10A case
-    statement.  If you use more motors, define them accordingly.
+3.  Set the motors in the constants later in this code to the proper
+    motor controllers in the MDD10A case statement.  If you use more
+    motors, define them accordingly.
     Motor controller 1, motor 1 = 0
     Motor controller 1, motor 2 = 1
     Motor controller 2, motor 1 = 2
@@ -64,6 +65,15 @@ writeRobot() - to make the motors move!
 
 void setup() {
     // put your setup code here, to run once:
+    Serial.begin(115200);
+#if !defined(__MIPSEL__)
+  while (!Serial); // Wait for serial port to connect - used on Leonardo, Teensy and other boards with built-in USB CDC serial connection
+#endif
+  if (Usb.Init() == -1) {
+    Serial.print(F("\r\nOSC did not start"));
+    while (1); //halt
+  }
+  Serial.print(F("\r\nXbox Wireless Receiver Library Started"));
 }
 
 void loop() {
@@ -95,6 +105,9 @@ float DriveRRSpeed = 0;
 float DriveSideSpeed = 0;
 float liftSpeed = 0;
 float clawSpeed = 0;
+// The constants below assign motor controllers in MDD10A.cpp switch statement
+// Change these and/or define more based on motor control needs. This is
+// preferred to changing other variables that tie directly to electronics.
 const int LeftDrive1 = 0;
 const int LeftDrive2 = 1;
 const int RightDrive1 = 2;
