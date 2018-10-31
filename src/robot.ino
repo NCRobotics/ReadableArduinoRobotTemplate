@@ -1,5 +1,5 @@
 /*
-Published under Open Source license (be specific)
+Published under BSD 2.0 license
 Code by Gary Needham
 
 Code written for Arudino ADK based on robots seen in the
@@ -39,17 +39,8 @@ To get started:
 */
 
 // Arduino standard libraries
-#include <Arduino.h>
-#include <Servo.h>
 
-#include <XBOXRECV.h>     // USB Host Shield Library
-#include <MDD10A.h>       // Motor Controllers
 
-// Necessary inits from libraries; the library is first--
-// --to call the commands use the second field.
-USB Usb;
-XBOXRECV Xbox(&Usb);
-MDD10A mc;
 
 bool autoRunning = false;
 int motorDelay = 0;
@@ -107,7 +98,7 @@ float liftSpeed = 0;
 float clawSpeed = 0;
 // The constants below assign motor controllers in MDD10A.cpp switch statement
 // Change these and/or define more based on motor control needs. This is
-// preferred to changing other variables that tie directly to electronics.
+// preferred to changing other variables that reference the electronics.
 const int LeftDrive1 = 0;
 const int LeftDrive2 = 1;
 const int RightDrive1 = 2;
