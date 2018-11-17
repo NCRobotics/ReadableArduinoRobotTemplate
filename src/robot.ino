@@ -39,8 +39,18 @@ To get started:
 */
 
 // Arduino standard libraries
+// Install USB Host Shield into PlatformIO,
+#include <Arduino.h>
+#include <Servo.h>
 
+#include <XBOXRECV.h>     // USB Host Shield Library
+#include <MDD10A.h>       // Motor Controllers
 
+// Necessary inits from libraries; the library is first--
+// --to call the commands use the second field.
+USB Usb;
+XBOXRECV Xbox(&Usb);
+MDD10A mc;
 
 bool autoRunning = false;
 int motorDelay = 0;
@@ -96,15 +106,25 @@ float DriveRRSpeed = 0;
 float DriveSideSpeed = 0;
 float liftSpeed = 0;
 float clawSpeed = 0;
-// The constants below assign motor controllers in MDD10A.cpp switch statement
-// Change these and/or define more based on motor control needs. This is
-// preferred to changing other variables that reference the electronics.
-const int LeftDrive1 = 0;
+
+/* The constants below assign motor controllers in MDD10A.cpp switch statement
+ Change these and/or define more based on motor control needs. This is
+ preferred to changing other variables that reference the electronics.
+ Motor controller 1, motor 1 = 0
+ Motor controller 1, motor 2 = 1
+ Motor controller 2, motor 1 = 2
+ Motor controller 2, motor 2 = 3
+ Motor controller 3, motor 1 = 4
+ Motor controller 3, motor 2 = 5
+ Motor controller 4, motor 1 = 6
+ Motor controller 4, motor 2 = 7
+*/
+const int LeftDrive1 = 6;
 const int LeftDrive2 = 1;
-const int RightDrive1 = 2;
+const int RightDrive1 = 7;
 const int RightDrive2 = 3;
-const int LiftMotor = 4;
-const int ClawMotor = 5;
+const int LiftMotor = 2;
+const int ClawMotor = 0;
 
 void autonomousRunner () {
   autoRunning = false; //this should be the last line of your atonomous code
@@ -122,14 +142,17 @@ void controllerRead() {
           Serial.print(Xbox.getButtonPress(L2, i));
           Serial.print("\tR2: ");
           Serial.println(Xbox.getButtonPress(R2, i));
-          Xbox.setRumbleOn(Xbox.getButtonPress(L2, i), Xbox.getButtonPress(R2, i), i);
+//          Xbox.setRumbleOn(Xbox.getButtonPress(L2, i), Xbox.getButtonPress(R2, i), i);
         }
 
         if (Xbox.getAnalogHat(LeftHatX, i) > 7500) {
-          LeftX = map(Xbox.getAnalogHat(LeftHatY), 7500, 32767, 0, 255);
+          LeftX = map(Xbox.getAnalogHat(LeftHatX), 7500, 32767, 0, 255);
         }
         if (Xbox.getAnalogHat(LeftHatX, i) < -7500) {
-          LeftX = map(Xbox.getAnalogHat(LeftHatY), -7500, -32767, 0, -255);
+          LeftX = map(Xbox.getAnalogHat(LeftHatX), -7500, -32767, 0, -255);
+        }
+        if (Xbox.getAnalogHat(LeftHatX, i) < 7500 && Xbox.getAnalogHat(LeftHatX, i) > -7500) {
+          LeftX = 0;
         }
         if (Xbox.getAnalogHat(LeftHatY, i) > 7500) {
           LeftY = map(Xbox.getAnalogHat(LeftHatY), 7500, 32767, 0, 255);
@@ -137,17 +160,26 @@ void controllerRead() {
         if (Xbox.getAnalogHat(LeftHatY, i) < -7500) {
           LeftY = map(Xbox.getAnalogHat(LeftHatY), -7500, -32767, 0, -255);
         }
+        if (Xbox.getAnalogHat(LeftHatY, i) < 7500 && Xbox.getAnalogHat(LeftHatY, i) > -7500) {
+          LeftY = 0;
+        }
         if (Xbox.getAnalogHat(RightHatX, i) > 7500) {
-          RightX = map(Xbox.getAnalogHat(RightHatY), 7500, 32767, 0, 255);
+          RightX = map(Xbox.getAnalogHat(RightHatX), 7500, 32767, 0, 255);
         }
         if (Xbox.getAnalogHat(RightHatX, i) < -7500) {
-          RightX = map(Xbox.getAnalogHat(RightHatY), -7500, -32767, 0, -255);
+          RightX = map(Xbox.getAnalogHat(RightHatX), -7500, -32767, 0, -255);
+        }
+        if (Xbox.getAnalogHat(RightHatX, i) < 7500 && Xbox.getAnalogHat(RightHatX, i) > -7500) {
+          RightX = 0;
         }
         if (Xbox.getAnalogHat(RightHatY, i) > 7500) {
           RightY = map(Xbox.getAnalogHat(RightHatY), 7500, 32767, 0, 255);
         }
         if (Xbox.getAnalogHat(RightHatY, i) < -7500) {
           RightY = map(Xbox.getAnalogHat(RightHatY), -7500, -32767, 0, -255);
+        }
+        if (Xbox.getAnalogHat(RightHatY, i) < 7500 && Xbox.getAnalogHat(RightHatY, i) > -7500) {
+            RightY = 0;
         }
 
         if (Xbox.getButtonClick(UP, i)) {
@@ -212,14 +244,14 @@ void setDriveSpeeds() {
   switch (driverMode) {
     case 1:
       // Tank Drive
-      DriveLeftSpeed = LeftY - LeftX;
+      DriveLeftSpeed = -LeftY;
       if (DriveLeftSpeed > 255) {
         DriveLeftSpeed = 255;
       }
       else if (DriveLeftSpeed < -255) {
         DriveLeftSpeed = -255;
       }
-      DriveRightSpeed = LeftY + LeftX;
+      DriveRightSpeed = -RightY;
       if (DriveRightSpeed > 255) {
         DriveRightSpeed = 255;
       }
