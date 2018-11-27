@@ -17,7 +17,7 @@ public:
 
 	//PinOuts.  Use only one template. Change to match your robot.
 	//ARC Reactor V2
-	const int _mc1m1_dir = 42;
+/* const int _mc1m1_dir = 42;
 	const int _mc1m1_pwm = 10;
 	const int _mc1m2_dir = 43;
 	const int _mc1m2_pwm = 11;
@@ -33,9 +33,9 @@ public:
 	const int _mc4m1_pwm = 5;
 	const int _mc4m2_dir = 29;
 	const int _mc4m2_pwm = 6;
-
+*/
 	//ARC Reactor V1
-/*	const int _mc1m1_dir = 38;
+	const int _mc1m1_dir = 38;
 	const int _mc1m1_pwm = 10;
 	const int _mc1m2_dir = 40;
 	const int _mc1m2_pwm = 11;
@@ -51,7 +51,7 @@ public:
 	const int _mc4m1_pwm = 4;
 	const int _mc4m2_dir = 31;
 	const int _mc4m2_pwm = 6;
-*/
+
 
 	// C4TJ
 /*	const int _mc1m1_dir = 22;
